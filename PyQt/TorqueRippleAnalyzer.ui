@@ -14,7 +14,10 @@
    <string>TorqueRippleTest</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="ob_startbutton">
+   <widget class="QPushButton" name="ob_Start_Button">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -26,8 +29,11 @@
     <property name="text">
      <string>Start</string>
     </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QListView" name="ob_listView">
+   <widget class="QListWidget" name="ob_listWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -54,7 +60,6 @@
    </widget>
    <addaction name="ob_menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

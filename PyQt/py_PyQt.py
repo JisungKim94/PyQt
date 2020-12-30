@@ -4,10 +4,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
 import os
+import numpy as np
+from nptdms import TdmsFile
 
 # UI파일 연결
 # 단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
-form_class = uic.loadUiType("C:/98_Git/Tools/PyQt/TorqueRippleAnalyzer.ui")[0]
+form_class = uic.loadUiType("D:/Git/Tools/PyQt/TorqueRippleAnalyzer.ui")[0]
 
 # 화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, form_class):
@@ -17,6 +19,7 @@ class WindowClass(QMainWindow, form_class):
 
         # ====================== list Widgets Init
         self.ob_listWidget.setAlternatingRowColors(True)
+        self.ob_listWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
         # ====================== Buttons Init
         self.ob_Start_Button.clicked.connect(self.call_Start_Button_Function)
@@ -50,20 +53,32 @@ class WindowClass(QMainWindow, form_class):
 
     # === Buttons
     def call_Start_Button_Function(self):
-        print("ok")
+        Widget_items = self.ob_listWidget.selectedItems()
+
+        if not self.ob_listWidget.currentItem():    # 파일 선택 안하고 껐을 때 오류 방지
+            return
+
+        for index in Widget_items:
+            each_Widget_item = str(index.text())
+            tdms_file = TdmsFile(each_Widget_item)
+            # print(tdms_file)
+            # print(tdms_file['Motor Performace Test Data'])
+            selected_tmds_data = tdms_file['Motor Performace Test Data']['Time']
+            # print(selected_tmds_data.data)
 
     # === Menubar
     def call_openfile_Function(self):
         self.ob_listWidget.clear()
-        fnames = QFileDialog.getOpenFileNames(self, "Open Files", "./")
-        print(len(fnames[0]))
-        if fnames[0]:  # 파일 선택 안하고 껐을 때 오류 방지
-            for i in range(len(fnames[0])):
-                # with open(fnames[0][i], "r") as f:
-                #     pass
-                self.ob_listWidget.addItem(fnames[0][i])
+        files_path = QFileDialog.getOpenFileNames(self, "Open Files", "./")
+        
+        if files_path[0]:  # 파일 선택 안하고 껐을 때 오류 방지
+            for i in range(len(files_path[0])):
+                # with open(files_path[0][i], "r") as f:
+                    # pass
                 # file 내부 데이터 불러오기
                 # file_data = f.read()
+                self.ob_listWidget.addItem(files_path[0][i])
+
 
     def call_openfolder_Function(self):
         self.ob_listWidget.clear()
@@ -74,7 +89,7 @@ class WindowClass(QMainWindow, form_class):
 
         file_list = os.listdir(folder_path)
         file_list.sort()
-        file_list_py = [file for file in file_list if file.endswith(".py")]
+        file_list_py = [file for file in file_list if file.endswith(".tdms")]
 
         for i in range(len(file_list_py)):
             self.ob_listWidget.addItem(file_list_py[i])

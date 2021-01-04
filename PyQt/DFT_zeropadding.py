@@ -22,5 +22,9 @@ class class_DFT:
             FFT_out = np.fft.fft(y)/N*2 			                # fft computing and normalization
             FFT_out = FFT_out[range(int(N/2))]
             FFT_Gain = abs(FFT_out)
+            
+            EstMotorSpeed = 1062.9 # test용 file은 이거 쓰면 맞게 나옴 -> 1062.9,  test용 tdms file rpm은 0~3000 rpm이라 평균내면 이정도 나옴
+            f1 = EstMotorSpeed / 60
+            Order = freq / f1
 
-            return FFT_Gain, freq
+            return FFT_Gain, Order

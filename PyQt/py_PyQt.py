@@ -12,7 +12,7 @@ from DFT_zeropadding import class_DFT
 
 # UI파일 연결
 # 단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
-form_class = uic.loadUiType("C:/98_Git/Tools/PyQt/TorqueRippleAnalyzer.ui")[0]
+form_class = uic.loadUiType("D:/Git/Tools/PyQt/TorqueRippleAnalyzer.ui")[0]
 
 # 화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, form_class):
@@ -70,11 +70,19 @@ class WindowClass(QMainWindow, form_class):
             selected_tmds_data_Torque = tdms_file["Motor Performace Test Data"]["DRIVE TORQUE"]
             selected_tmds_data_Time = tdms_file["Motor Performace Test Data"]["Time"]
             
-            FFT = class_DFT(selected_tmds_data_Torque, selected_tmds_data_Time, 4)
-            Magnitude, Frequency = FFT.def_DFT()
-            plt.plot(Frequency, Magnitude)
+            # ===================================================================
+            # To do : Motor Speed 받아서 Order 계산 자동화
+            # ===================================================================
             
-        plt.xlim(0,100)
+            FFT = class_DFT(selected_tmds_data_Torque, selected_tmds_data_Time, 4)
+            Magnitude, Order = FFT.def_DFT()
+
+            plt.plot(Order, Magnitude)
+            
+        plt.xlim(0,24)
+        plt.ylim(0,0.15)
+        plt.yticks([i*0.05 for i in range(1,4)])
+        plt.xticks([j*1 for j in range(0,25)])
         plt.grid()
         plt.show()
 
